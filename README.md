@@ -24,7 +24,7 @@ select count (distinct zip_code) from home_value_data group by state
 
 |highest year| lowest year|
 |---|---|
-|2018	|1996|
+|2018|1996|
 
 [^1]: Hint: The date column is in the format yyyy-mm. Try taking a look at using the substr() function to help extract just the year.
 ```sql
@@ -44,15 +44,26 @@ into a numeric type if you will be ordering by that field. See [here](https://st
 
 - [X] Analysis: Explore how home value differ by region as well as change over time.
 
-- [X] Using the most recent month of data available, which states have the highest average home values?
 
-- [X] How about the lowest?
+- [X] Using the most recent month of data available, which states have the highest average home values? How about the lowest?
 
-- [X] Which states have the highest/lowest average home values for the year of 2017?
+|function|value|state|
+|---|---|---|
+|min|112452|MO|
+|max|17757800|NY|
 
-- [X] What about for the year of 2007?
+- [X] Which states have the highest/lowest average home values for the year of 2017? What about for the year of 2007? 1997?
 
-- [X] 1997?
+|year| value|state|
+|---|---|---|
+|2017|21600|OK|
+|2007|91773|OK|
+|1997|56326|OK|
+
+```sql
+SELECT round(avg(value)),state  from home_value_data where substr(date,1,4) = '1997' and value not null group by state order by 1 ASC limit 1
+```
+
 
 ## Additional Challenges
 
