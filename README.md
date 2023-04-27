@@ -69,9 +69,31 @@ SELECT round(avg(value)),state  from home_value_data where substr(date,1,4) = '1
 
 ### Intermediate Challenge
 
-What is the percent change 176 in average home values from 2007 to 2017 by state? How about from 1997 to 2017?
+- [X] What is the percent change in average home values from 2007 to 2017 by state? How about from 1997 to 2017?
 Hint: We can use the WITH clause to create temporary tables containing the average home values for each of those years, then join them together to compare the change over time.
 How would you describe the trend in home values for each state from 1997 to 2017? How about from 2007 to 2017? Which states would you recommend for making real estate investments?
+```sql
+with old_state_values as (
+select round(avg(value)) as 'avg', state from home_value_data where substr(date,1,4) = '2007' group by state
+),
+new_state_values as (
+select round(avg(value)) as 'avg', state from home_value_data where substr(date,1,4) = '2017' group by state
+),
+older_state_values as (
+select round(avg(value)) as 'avg', state from home_value_data where substr(date,1,4) = '1997' group by state
+)
+select
+	old.state,
+	round((100*new.avg - old.avg)/old.avg)  AS '2007-2017 %-increase',
+	round((100*old.avg - older.avg)/older.avg)  AS '1997-2007 %-increase'
+from new_state_values as new
+JOIN old_state_values as old
+on old.state = new.state
+JOIN older_state_values as older
+on old.state = older.state
+order by 3 desc
+```
+
 
 ### Advanced Challenge
 
