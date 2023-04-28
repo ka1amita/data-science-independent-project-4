@@ -93,7 +93,33 @@ JOIN older_state_values as older
 on old.state = older.state
 order by 3 desc
 ```
+or with lag() / lead()
 
+```sql
+WITH yearly_avg AS
+(
+SELECT
+	cast(substr(date,1,4) as integer) as 'year',
+	round(avg(value)) as 'avg'
+FROM
+	home_value_data
+WHERE
+	state = 'OK'
+GROUP BY
+	substr(date,1,4)
+),
+
+values_from_subsequent_years as (
+SELECT
+	year, avg as 'current',
+	lead(avg, 1,0) over (order by year desc) as 'previous'
+	FROM
+		yearly_avg
+)
+
+SELECT year, ROUND(100*(current-previous)/previous)
+FROM values_from_subsequent_years;		
+```
 
 ### Advanced Challenge
 
