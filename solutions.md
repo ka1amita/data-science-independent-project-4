@@ -123,4 +123,21 @@ FROM values_from_subsequent_years;
 
 ### Advanced Challenge
 
-- [ ] Join the house value data with the table of zip-code level census data. Do there seem to be any correlations between the estimated house values and characteristics of the area, such as population count or median household income?
+- [X] Join the house value data with the table of zip-code level census data. Do there seem to be any correlations between the estimated house values and characteristics of the area, such as population count or median household income?
+```sql
+select
+	avg(h.value),
+CASE
+	WHEN C.median_household_income <=50000 THEN 'LOW-INCOME'
+	WHEN C.median_household_income >= 100000 THEN 'HIGH_INCOME'
+	ELSE 'MODERATE_INCOME'
+END AS INCOME
+FROM
+	home_value_data as h
+JOIN
+	"census_data - census_data" as c
+on
+	h.zip_code = c.zip_code
+GROUP by INCOME
+ORDER BY 1 DESC
+```
